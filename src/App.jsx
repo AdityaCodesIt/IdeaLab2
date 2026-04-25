@@ -242,10 +242,13 @@ function App() {
     }
   };
 
-  // --- Sign Out ---
   const handleSignOut = async () => {
     try {
-      await supabase.auth.signOut();
+      // Add a timeout to signOut so it doesn't hang the UI
+      await Promise.race([
+        supabase.auth.signOut(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Signout timeout')), 3000))
+      ]);
     } catch (error) {
       console.error('Supabase signout error:', error);
     }
