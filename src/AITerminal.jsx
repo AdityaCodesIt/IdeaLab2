@@ -29,7 +29,10 @@ export default function AITerminal({ onHome, onProfile }) {
     setIsLoading(true);
 
     try {
-      const apiKey = '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';
+      const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
+      if (!apiKey) {
+        throw new Error('API key is missing. Please set VITE_OPENROUTER_API_KEY in your .env file.');
+      }
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
